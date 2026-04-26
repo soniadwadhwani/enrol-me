@@ -1,0 +1,327 @@
+Create 2 highly polished mobile app screens for Enrol-Me using the uploaded Enrol-Me logo as the official brand logo. Use the uploaded logo exactly where instructed. Do not redesign the logo. Use iPhone 16 screen size (393 x 852 px). Create both screens in the same design system. Do not improvise random layouts, colors or structures.
+
+==================================================
+FRAME SETTINGS
+==================================================
+
+Device size:
+iPhone 16
+393 x 852 px
+
+Use realistic iPhone frame proportions.
+Use safe area margins.
+
+==================================================
+BRAND SYSTEM (USE EXACTLY)
+==================================================
+
+Use uploaded Enrol-Me logo.
+
+Colors:
+Background = #F9F9FB
+Primary Surface = #B6D6CC
+Secondary Surface = #74A4BC
+Accent = #F11859
+Main Text = #111318
+Muted Text = #6E7480
+Border = #E8EAF0
+White = #FFFFFF
+
+Do not use any other colors.
+
+Use Accent only for:
+active nav state
+CTA buttons
+small highlights
+badges
+
+Typography:
+Use Raleway or close modern geometric sans serif.
+
+Text styles:
+36px Bold
+28px Bold
+22px Semibold
+18px Semibold
+16px Medium
+13px Regular
+11px Regular
+
+Spacing:
+8 / 12 / 16 / 20 / 24 / 32
+
+Radius:
+Search = 24
+Cards = 28
+Small chips = full pill
+Dock = 36
+
+Shadow:
+0 10 30 rgba(17,19,24,0.08)
+
+Icons:
+Thin modern line icons only.
+
+==================================================
+SCREEN 1 — HOME
+==================================================
+
+Background full screen #F9F9FB
+
+TOP AREA:
+32px top padding
+
+Header row with 24px horizontal padding.
+
+LEFT SIDE:
+Place uploaded Enrol-Me logo at 28px height.
+12px gap.
+Text:
+Mumbai
+Chevron down icon
+
+Text size 20 semibold.
+
+RIGHT SIDE:
+Circular profile avatar 40x40.
+Fill #B6D6CC.
+
+-----------------------------------
+HERO SECTION
+-----------------------------------
+
+32px below header.
+
+Left aligned text:
+
+Find Classes.
+Build Skills.
+Near You.
+
+Use 36px bold.
+Color #111318
+Line height tight.
+
+24px side padding.
+
+-----------------------------------
+SEARCH ROW
+-----------------------------------
+
+24px below hero.
+
+Horizontal row with 24px side padding.
+
+LEFT:
+Search bar width approx 285px
+height 56px
+white fill
+radius 24
+shadow
+
+Inside:
+search icon left
+placeholder:
+Search tutors, sports, dance...
+16px muted text
+
+RIGHT:
+56x56 circular button
+fill #F11859
+white filter/sliders icon
+
+12px gap between search and button.
+
+-----------------------------------
+CATEGORY CHIPS
+-----------------------------------
+
+20px below search.
+
+Horizontal scroll row.
+
+Chip style:
+height 38
+pill radius
+16px horizontal padding
+
+Chip 1 active:
+fill #111318
+white text
+All
+
+Other chips white with border:
+Academics
+Sports
+Arts
+Fitness
+Tutors
+
+-----------------------------------
+SECTION 1
+-----------------------------------
+
+28px below chips.
+
+Header row:
+Recommended Near You (22 semibold)
+See all (13 muted)
+
+24px side padding.
+
+16px below create horizontal premium cards.
+
+Card:
+280 x 210
+white fill
+radius 28
+shadow
+
+Top image area 130 height with realistic class photography.
+
+Bottom area:
+Title
+4.8 rating
+1.2 km
+₹2,500/month
+Verified badge small outline accent
+
+Show 2 cards partially visible.
+
+-----------------------------------
+SECTION 2
+-----------------------------------
+
+24px below.
+
+Title:
+Trending This Week
+
+Create smaller cards:
+220 x 130
+image + title.
+
+-----------------------------------
+BOTTOM NAVIGATION DOCK
+-----------------------------------
+
+Floating dock only.
+Not full width.
+
+Place 18px above bottom.
+
+Dock:
+center aligned
+width 340
+height 72
+white fill
+radius 36
+shadow
+
+5 icon zones only:
+
+Home active:
+44x44 circle fill #F11859
+white icon
+
+Explore
+Saved
+Bookings
+Profile
+
+Inactive icons:
+#6E7480
+
+No labels.
+
+==================================================
+SCREEN 2 — EXPLORE NEAR ME
+==================================================
+
+Same background.
+Same dock.
+
+TOP:
+32px top padding.
+24px side padding.
+
+Place uploaded Enrol-Me logo small on top left header row.
+
+Below:
+Explore Near Me
+
+28px bold
+
+Below subtitle:
+Move around to discover nearby classes
+
+13px muted
+
+-----------------------------------
+DISCOVERY CANVAS
+-----------------------------------
+
+20px below subtitle.
+
+Create large canvas filling middle screen.
+
+Do NOT create vertical feed.
+
+Create floating rounded tiles positioned in all directions like an Apple Watch cluster map.
+
+Some cut off edges left/right/top.
+
+Tile sizes:
+Large 180x140
+Medium 140x110
+Small 110x90
+
+Use center emphasis:
+center cards larger
+outer cards smaller
+
+Colors only:
+white
+#B6D6CC
+#74A4BC
+
+Rounded radius 28
+soft shadow
+
+Tile labels:
+Football Academy
+Dance Studio
+Coding Lab
+Swimming
+Piano Tutor
+Yoga Nearby
+Art Class
+Chess Coach
+Robotics Camp
+Weekend Pottery
+
+Use subtle icons on some.
+
+Looks like user can pan left right up down.
+
+-----------------------------------
+BOTTOM DOCK
+-----------------------------------
+
+Same dock.
+
+Explore active:
+pink filled circle icon.
+
+==================================================
+GLOBAL RULES
+==================================================
+
+Use uploaded Enrol-Me logo elegantly.
+No random colors.
+No childish UI.
+No square cards.
+No ugly full-width navbar.
+No clutter.
+Keep whitespace premium.
+Both screens must feel like one startup product.
