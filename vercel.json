@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm --prefix figma install",
+  "buildCommand": "rm -rf .vercel_build_output && mkdir -p .vercel_build_output/figma .vercel_build_output/assets && cp index.html .vercel_build_output/index.html && cp -R assets/. .vercel_build_output/assets/ && npm --prefix figma run build && cp figma/dist/index.html .vercel_build_output/figma/index.html && cp -R figma/dist/assets/. .vercel_build_output/assets/",
+  "outputDirectory": ".vercel_build_output"
+}
