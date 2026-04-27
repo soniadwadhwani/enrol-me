@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
+
+const OrgDashboardDesktop = lazy(() => import('./OrgDashboardDesktop'));
 import {
   Search, MapPin, ChevronDown, X, Star, Heart, CheckCircle,
   Phone, Lock, Eye, EyeOff, Users, Calendar, MessageSquare,
@@ -125,6 +127,7 @@ interface DesktopWebsiteProps {
 export default function DesktopWebsite({ onSwitchToApp: _onSwitchToApp }: DesktopWebsiteProps) {
   // ── state ──
   const [isLoggedIn,        setIsLoggedIn]        = useState(false);
+  const [userRole,          setUserRole]          = useState<'parent' | 'learner' | 'org' | null>(null);
   const [activeTab,         setActiveTab]          = useState('explore');
   const [navScrolled,       setNavScrolled]        = useState(false);
   const [showLogin,         setShowLogin]          = useState(false);
@@ -172,8 +175,19 @@ export default function DesktopWebsite({ onSwitchToApp: _onSwitchToApp }: Deskto
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const doLogin  = (e: React.FormEvent) => { e.preventDefault(); setIsLoggedIn(true); setShowLogin(false);  setPhone(''); setPassword(''); setEmail(''); };
-  const doCreate = (e: React.FormEvent) => { e.preventDefault(); setIsLoggedIn(true); setShowCreate(false); };
+  const doLogin  = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoggedIn(true);
+    if (loginMode === 'org') setUserRole('org');
+    setShowLogin(false);
+    setPhone(''); setPassword(''); setEmail('');
+  };
+  const doCreate = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoggedIn(true);
+    if (createStep === 'org') setUserRole('org');
+    setShowCreate(false);
+  };
   const toggleSave = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isLoggedIn) { setShowLogin(true); return; }
@@ -277,7 +291,7 @@ export default function DesktopWebsite({ onSwitchToApp: _onSwitchToApp }: Deskto
                 <User size={14} color={C.blue} />
               </button>
               <button
-                onClick={() => { setIsLoggedIn(false); setActiveTab('explore'); }}
+                onClick={() => { setIsLoggedIn(false); setUserRole(null); setActiveTab('explore'); }}
                 style={{
                   border: `1px solid ${C.border}`, borderRadius: 8,
                   padding: '7px 14px', background: 'transparent',
@@ -987,6 +1001,14 @@ export default function DesktopWebsite({ onSwitchToApp: _onSwitchToApp }: Deskto
   // ═══════════════════════════════════════
   // RENDER
   // ═══════════════════════════════════════
+  if (userRole === 'org') {
+    return (
+      <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: FONT, color: C.muted }}>Loading...</div>}>
+        <OrgDashboardDesktop onLogout={() => { setUserRole(null); setIsLoggedIn(false); setActiveTab('explore'); }} />
+      </Suspense>
+    );
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: C.bgPage, fontFamily: FONT }}>
       {Navbar}
