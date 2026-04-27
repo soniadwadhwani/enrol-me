@@ -3,7 +3,8 @@ import {
   Search, MapPin, ChevronDown, X, Star, Heart, CheckCircle,
   Phone, Lock, Eye, EyeOff, Users, Calendar, MessageSquare,
   CreditCard, User, Navigation, ChevronRight,
-  BadgeCheck, Filter,
+  BadgeCheck, Filter, SlidersHorizontal,
+  Trophy, BookOpen, Palette, Music, Code2, GraduationCap, Waves, Sparkles,
 } from 'lucide-react';
 import Logo       from '../../imports/Logo.png';
 import BlobMascot from './BlobMascot';
@@ -103,6 +104,17 @@ const TRENDING_DISC = [
   { id: 206, title: 'Drawing & Craft',  area: 'Lavale',    rating: 4.5, price: '₹1,600/mo', img: 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=400&q=80', tag: 'Arts'      },
 ];
 
+const HERO_CATS = [
+  { id: 'Sports',    label: 'Sports',    Icon: Trophy         },
+  { id: 'Academics', label: 'Academics', Icon: BookOpen       },
+  { id: 'Arts',      label: 'Arts',      Icon: Palette        },
+  { id: 'Music',     label: 'Music',     Icon: Music          },
+  { id: 'Coding',    label: 'Coding',    Icon: Code2          },
+  { id: 'Tutors',    label: 'Tutors',    Icon: GraduationCap  },
+  { id: 'Swimming',  label: 'Swimming',  Icon: Waves          },
+  { id: 'Dance',     label: 'Dance',     Icon: Sparkles       },
+];
+
 // ─────────────────────────────────────────
 // COMPONENT
 // ─────────────────────────────────────────
@@ -130,7 +142,7 @@ export default function DesktopWebsite({ onSwitchToApp: _onSwitchToApp }: Deskto
   const [saved,             setSaved]              = useState<Set<number>>(new Set());
   const [hovCard,           setHovCard]            = useState<number | null>(null);
   const [hovCat,            setHovCat]             = useState<number | null>(null);
-  const [heroCat,           setHeroCat]            = useState('All');
+  const [heroCat,           setHeroCat]            = useState('');
 
   // ── lifecycle ──
   useEffect(() => {
@@ -349,7 +361,7 @@ export default function DesktopWebsite({ onSwitchToApp: _onSwitchToApp }: Deskto
           <div style={{ transform: 'translateX(24px)', overflow: 'visible' }}>
             <BlobMascot
               scale={1.38}
-              speechText={'Explore 500+ classes near you! ✨'}
+              speechText={'Hi! Welcome to Enrol-Me. Explore classes near you! ✨'}
               onClick={() => window.scrollTo({ top: 700, behavior: 'smooth' })}
             />
           </div>
