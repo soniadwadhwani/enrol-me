@@ -34,7 +34,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
     },
     {
       id: 2,
-      title: 'Piano Lessons',
+      title: 'Piano Studio',
       location: 'Hinjewadi',
       rating: 4.8,
       price: '₹3,000/mo',
@@ -44,7 +44,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
     },
     {
       id: 3,
-      title: 'Football Coaching',
+      title: 'Football Academy',
       location: 'Lavale',
       rating: 4.7,
       price: '₹1,800/mo',
@@ -54,7 +54,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
     },
     {
       id: 4,
-      title: 'Coding for Kids',
+      title: 'Coding Lab',
       location: 'Wakad',
       rating: 4.9,
       price: '₹3,500/mo',
@@ -64,7 +64,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
     },
     {
       id: 5,
-      title: 'Kathak Dance Studio',
+      title: 'Dance Hub',
       location: 'Lavale',
       rating: 4.6,
       price: '₹2,200/mo',
@@ -74,7 +74,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
     },
     {
       id: 6,
-      title: 'Robotics Camp',
+      title: 'Robotics Club',
       location: 'Hinjewadi',
       rating: 4.8,
       price: '₹4,000/mo',
@@ -84,7 +84,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
     },
     {
       id: 7,
-      title: 'Yoga for Adults',
+      title: 'Yoga Kids',
       location: 'Lavale',
       rating: 4.7,
       price: '₹1,500/mo',
@@ -94,7 +94,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
     },
     {
       id: 8,
-      title: 'Art & Sketching Class',
+      title: 'Art House',
       location: 'Wakad',
       rating: 4.5,
       price: '₹2,000/mo',
@@ -104,7 +104,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
     },
     {
       id: 9,
-      title: 'Spoken English Coaching',
+      title: 'Tuition Point',
       location: 'Hinjewadi',
       rating: 4.6,
       price: '₹2,800/mo',
@@ -114,12 +114,12 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
     },
     {
       id: 10,
-      title: 'Tennis Academy',
+      title: 'Chess Champs',
       location: 'Lavale',
       rating: 4.9,
       price: '₹3,200/mo',
-      description: 'Professional tennis coaching for beginners to advanced players.',
-      timings: 'Weekends • 5 PM',
+      description: 'Strategic chess training for all skill levels. Develop analytical thinking.',
+      timings: 'Weekends • 11 AM',
       verified: true
     },
     {

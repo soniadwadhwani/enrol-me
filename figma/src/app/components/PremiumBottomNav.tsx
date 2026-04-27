@@ -14,12 +14,11 @@ export default function PremiumBottomNav({ activeTab, onTabChange }: PremiumBott
 
   return (
     <div style={{
-      position: 'fixed',
+      position: 'absolute',
       bottom: '16px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      width: 'calc(100% - 32px)',
-      maxWidth: '400px',
+      left: '16px',
+      right: '16px',
+      width: 'auto',
       height: '56px',
       backgroundColor: 'rgba(215, 231, 228, 0.85)',
       backdropFilter: 'blur(12px)',

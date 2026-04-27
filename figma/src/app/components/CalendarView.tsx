@@ -4,9 +4,10 @@ import { useState, useMemo } from 'react';
 interface CalendarViewProps {
   bookings: any[];
   onToggleView: () => void;
+  isLearnerMode?: boolean;
 }
 
-export default function CalendarView({ bookings, onToggleView }: CalendarViewProps) {
+export default function CalendarView({ bookings, onToggleView, isLearnerMode = false }: CalendarViewProps) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -106,7 +107,9 @@ export default function CalendarView({ bookings, onToggleView }: CalendarViewPro
 
   const getDotColors = (day: number | null) => {
     const events = getEventsForDate(day);
-    const colors = events.map(e => e.childKey === 'shaurya' ? '#74A4BC' : '#B6D6CC');
+    const colors = isLearnerMode
+      ? events.map(() => '#9CA3AF')
+      : events.map(e => e.childKey === 'shaurya' ? '#74A4BC' : '#B6D6CC');
     return colors.slice(0, 3);
   };
 
@@ -366,13 +369,15 @@ export default function CalendarView({ bookings, onToggleView }: CalendarViewPro
                   width: '48px',
                   height: '48px',
                   borderRadius: '12px',
-                  backgroundColor: event.childKey === 'shaurya' ? 'rgba(116, 164, 188, 0.15)' : 'rgba(182, 214, 204, 0.15)',
+                  backgroundColor: isLearnerMode
+                    ? 'rgba(156, 163, 175, 0.12)'
+                    : (event.childKey === 'shaurya' ? 'rgba(116, 164, 188, 0.15)' : 'rgba(182, 214, 204, 0.15)'),
                   flexShrink: 0,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  <IconComponent size={24} style={{ color: event.iconColor }} />
+                  <IconComponent size={24} style={{ color: isLearnerMode ? '#6E7480' : event.iconColor }} />
                 </div>
 
                 {/* Center Content */}
@@ -385,12 +390,14 @@ export default function CalendarView({ bookings, onToggleView }: CalendarViewPro
                   }}>
                     {event.title}
                   </div>
-                  <div style={{
-                    fontSize: '13px',
-                    color: '#6E7480'
-                  }}>
-                    {event.child}
-                  </div>
+                  {!isLearnerMode && (
+                    <div style={{
+                      fontSize: '13px',
+                      color: '#6E7480'
+                    }}>
+                      {event.child}
+                    </div>
+                  )}
                 </div>
 
                 {/* Right Side - Time */}

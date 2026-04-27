@@ -4,17 +4,28 @@ import PageHeader from './PageHeader';
 
 interface ProfilePageProps {
   onNavigate?: (screen: string) => void;
+  onLogout?: () => void;
+  isLearnerMode?: boolean;
+  applicationsCount?: number;
 }
 
-export default function ProfilePage({ onNavigate }: ProfilePageProps) {
+export default function ProfilePage({ onNavigate, onLogout, isLearnerMode = false, applicationsCount = 0 }: ProfilePageProps) {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const profileSections = [
-    { icon: Bookmark, label: 'Saved Classes', count: '12', screen: 'savedClasses' },
-    { icon: Users, label: 'Children Profiles', count: '2', screen: 'childrenProfiles' },
-    { icon: Settings, label: 'Settings', screen: 'settings' },
-    { icon: HelpCircle, label: 'Help Center', screen: 'helpCenter' }
-  ];
+  const visibleSections = isLearnerMode
+    ? [
+        { icon: Bookmark, label: 'Saved Classes', count: '12', screen: 'savedClasses' },
+        { icon: Mail, label: 'My Applications', count: String(applicationsCount), screen: 'myApplications' },
+        { icon: Settings, label: 'Settings', screen: 'settings' },
+        { icon: HelpCircle, label: 'Help Center', screen: 'helpCenter' },
+      ]
+    : [
+        { icon: Bookmark, label: 'Saved Classes', count: '12', screen: 'savedClasses' },
+        { icon: Mail, label: 'My Applications', count: String(applicationsCount), screen: 'myApplications' },
+        { icon: Users, label: 'Children Profiles', count: '2', screen: 'childrenProfiles' },
+        { icon: Settings, label: 'Settings', screen: 'settings' },
+        { icon: HelpCircle, label: 'Help Center', screen: 'helpCenter' },
+      ];
 
   const handleSectionClick = (screen: string) => {
     if (onNavigate) {
@@ -30,7 +41,9 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
 
   const handleLogout = () => {
     setShowLogoutModal(false);
-    // Actual logout logic would go here
+    if (onLogout) {
+      onLogout();
+    }
   };
 
   return (
@@ -88,7 +101,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
       {/* Menu Items */}
       <div style={{ paddingLeft: '24px', paddingRight: '24px' }}>
         <div className="space-y-3">
-          {profileSections.map((section, index) => {
+          {visibleSections.map((section, index) => {
             const IconComponent = section.icon;
             return (
               <div

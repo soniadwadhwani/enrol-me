@@ -7,6 +7,7 @@ const SchedulePage = lazy(() => import('./components/SchedulePage'));
 const CommunicationsPage = lazy(() => import('./components/CommunicationsPage'));
 const FeesPage = lazy(() => import('./components/FeesPage'));
 const ProfilePage = lazy(() => import('./components/ProfilePage'));
+const MyApplicationsPage = lazy(() => import('./components/MyApplicationsPage'));
 const FiltersModal = lazy(() => import('./components/FiltersModal'));
 const ClassDetailPage = lazy(() => import('./components/ClassDetailPage'));
 const LocationSettings = lazy(() => import('./components/LocationSettings'));
@@ -20,10 +21,23 @@ const SettingsPage = lazy(() => import('./components/SettingsPage'));
 const HelpCenterPage = lazy(() => import('./components/HelpCenterPage'));
 const ChildDetailPage = lazy(() => import('./components/ChildDetailPage'));
 const AddChildPage = lazy(() => import('./components/AddChildPage'));
-const LearnerDashboard = lazy(() => import('./components/LearnerDashboard'));
 const OrganisationDashboard = lazy(() => import('./components/OrganisationDashboard'));
 
-type Screen = 'home' | 'explore' | 'schedule' | 'communications' | 'fees' | 'profile' | 'classDetail' | 'locationSettings' | 'alerts' | 'editProfile' | 'savedClasses' | 'childrenProfiles' | 'settings' | 'helpCenter' | 'childDetail' | 'addChild';
+type Screen = 'home' | 'explore' | 'schedule' | 'communications' | 'fees' | 'profile' | 'classDetail' | 'locationSettings' | 'alerts' | 'editProfile' | 'savedClasses' | 'myApplications' | 'childrenProfiles' | 'settings' | 'helpCenter' | 'childDetail' | 'addChild';
+
+interface ApplicationRecord {
+  id: string;
+  classTitle: string;
+  location: string;
+  studentName: string;
+  parentName: string;
+  preferredBatch: string;
+  preferredTiming: string;
+  phoneNumber: string;
+  notes: string;
+  status: 'Submitted' | 'In Review' | 'Confirmed';
+  submittedAtLabel: string;
+}
 
 const IPHONE_16_WIDTH = 393;
 const IPHONE_16_HEIGHT = 852;
@@ -55,7 +69,8 @@ export default function App() {
   const appShellStyle: CSSProperties = {
     background: 'radial-gradient(circle at 20% 0%, #e9f5f1 0%, #f4faf8 45%, #e6f0ee 100%)',
     fontFamily: 'Raleway, sans-serif',
-    minHeight: '100dvh',
+    height: '100dvh',
+    overflow: 'hidden',
     width: '100%',
     display: 'flex',
     alignItems: 'center',
@@ -75,6 +90,8 @@ export default function App() {
     boxSizing: 'border-box',
     transform: `scale(${phoneScale})`,
     transformOrigin: 'center',
+    marginTop: `${(FRAME_HEIGHT * (phoneScale - 1)) / 2}px`,
+    marginBottom: `${(FRAME_HEIGHT * (phoneScale - 1)) / 2}px`,
   };
 
   const screenStyle: CSSProperties = {
@@ -94,9 +111,27 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('home');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedClass, setSelectedClass] = useState<any>(null);
+  const [classDetailReturnScreen, setClassDetailReturnScreen] = useState<Screen>('home');
+  const [classDetailReturnTab, setClassDetailReturnTab] = useState('home');
   const [currentCity, setCurrentCity] = useState('Lavale');
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [selectedChildId, setSelectedChildId] = useState<number | null>(null);
+  const [myApplications, setMyApplications] = useState<ApplicationRecord[]>([
+    {
+      id: 'demo-application-1',
+      classTitle: 'Robotics Lab Studio',
+      location: 'Hinjewadi',
+      studentName: 'Aarav Sharma',
+      parentName: 'Priya Sharma',
+      preferredBatch: 'Weekend Batch',
+      preferredTiming: '10:00 AM',
+      phoneNumber: '9876543210',
+      notes: 'Interested in beginner robotics and coding projects.',
+      status: 'In Review',
+      submittedAtLabel: '2 days ago',
+    },
+  ]);
+  const isLearnerMode = userRole === 'learner';
 
   const suspenseFallback = (
     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6E7480' }}>
@@ -131,14 +166,26 @@ export default function App() {
   };
 
   const handleOpenClassDetail = (classData: any) => {
+    setClassDetailReturnScreen(activeScreen);
+    setClassDetailReturnTab(activeTab);
     setSelectedClass(classData);
     setActiveScreen('classDetail');
   };
 
   const handleBackFromClassDetail = () => {
-    setActiveScreen('home');
-    setActiveTab('home');
+    setActiveScreen(classDetailReturnScreen);
+    setActiveTab(classDetailReturnTab);
     setSelectedClass(null);
+  };
+
+  const handleSubmitApplication = (application: Omit<ApplicationRecord, 'id' | 'status' | 'submittedAtLabel'>) => {
+    const newItem: ApplicationRecord = {
+      ...application,
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      status: 'Submitted',
+      submittedAtLabel: 'just now',
+    };
+    setMyApplications((prev) => [newItem, ...prev]);
   };
 
   const handleTabChange = (tabId: string) => {
@@ -193,6 +240,11 @@ export default function App() {
   };
 
   const handleProfileNavigate = (screen: string) => {
+    if (isLearnerMode && (screen === 'childrenProfiles' || screen === 'childDetail' || screen === 'addChild')) {
+      setActiveScreen('profile');
+      setActiveTab('profile');
+      return;
+    }
     setActiveScreen(screen as Screen);
   };
 
@@ -224,25 +276,29 @@ export default function App() {
     setOnboardingComplete(true);
   };
 
+  const handleLogout = () => {
+    setOnboardingComplete(false);
+    setUserRole(null);
+    setActiveScreen('home');
+    setActiveTab('home');
+    setShowFilters(false);
+    setSelectedClass(null);
+    setCurrentCity('Lavale');
+    setSelectedChatId(null);
+    setSelectedChildId(null);
+    setMyApplications([]);
+  };
+
   // Show onboarding if not completed
   if (!onboardingComplete) {
     return renderInPhoneFrame(<OnboardingFlow onComplete={handleOnboardingComplete} />);
-  }
-
-  // Show Learner Dashboard
-  if (userRole === 'learner') {
-    return renderInPhoneFrame(
-      <Suspense fallback={suspenseFallback}>
-        <LearnerDashboard />
-      </Suspense>,
-    );
   }
 
   // Show Organisation Dashboard
   if (userRole === 'organisation') {
     return renderInPhoneFrame(
       <Suspense fallback={suspenseFallback}>
-        <OrganisationDashboard />
+        <OrganisationDashboard onLogout={handleLogout} />
       </Suspense>,
     );
   }
@@ -267,15 +323,30 @@ export default function App() {
             setActiveScreen('home');
             setActiveTab('home');
           }}
+          onOpenClassDetail={handleOpenClassDetail}
         />
       )}
-      {activeScreen === 'schedule' && <SchedulePage />}
+      {activeScreen === 'schedule' && <SchedulePage isLearnerMode={isLearnerMode} />}
       {activeScreen === 'communications' && <CommunicationsPage initialChatId={selectedChatId} />}
       {activeScreen === 'fees' && <FeesPage />}
-      {activeScreen === 'profile' && <ProfilePage onNavigate={handleProfileNavigate} />}
+      {activeScreen === 'profile' && (
+        <ProfilePage
+          onNavigate={handleProfileNavigate}
+          onLogout={handleLogout}
+          isLearnerMode={isLearnerMode}
+          applicationsCount={myApplications.length}
+        />
+      )}
       {activeScreen === 'editProfile' && <EditProfilePage onBack={handleBackToProfile} />}
       {activeScreen === 'savedClasses' && <SavedClassesPage onBack={handleBackToProfile} />}
-      {activeScreen === 'childrenProfiles' && (
+      {activeScreen === 'myApplications' && (
+        <MyApplicationsPage
+          onBack={handleBackToProfile}
+          applications={myApplications}
+          isLearnerMode={isLearnerMode}
+        />
+      )}
+      {!isLearnerMode && activeScreen === 'childrenProfiles' && (
         <ChildrenProfilesPage
           onBack={handleBackToProfile}
           onOpenAlerts={handleOpenAlerts}
@@ -283,13 +354,13 @@ export default function App() {
           onOpenAddChild={handleOpenAddChild}
         />
       )}
-      {activeScreen === 'childDetail' && selectedChildId && (
+      {!isLearnerMode && activeScreen === 'childDetail' && selectedChildId && (
         <ChildDetailPage
           childId={selectedChildId}
           onBack={handleBackToChildrenProfiles}
         />
       )}
-      {activeScreen === 'addChild' && (
+      {!isLearnerMode && activeScreen === 'addChild' && (
         <AddChildPage onBack={handleBackToChildrenProfiles} />
       )}
       {activeScreen === 'settings' && <SettingsPage onBack={handleBackToProfile} />}
@@ -298,6 +369,7 @@ export default function App() {
         <ClassDetailPage
           classData={selectedClass}
           onBack={handleBackFromClassDetail}
+          onSubmitApplication={handleSubmitApplication}
         />
       )}
       {activeScreen === 'locationSettings' && (
@@ -315,7 +387,7 @@ export default function App() {
       )}
 
       {/* Floating Alerts Button */}
-      <FloatingAlertsButton hasUnread={true} onClick={handleOpenAlerts} />
+      {activeScreen !== 'classDetail' && <FloatingAlertsButton hasUnread={true} onClick={handleOpenAlerts} />}
 
       {/* Filters Modal */}
       <FiltersModal isOpen={showFilters} onClose={handleCloseFilters} />

@@ -3,7 +3,11 @@ import { useState } from 'react';
 import PageHeader from './PageHeader';
 import CalendarView from './CalendarView';
 
-export default function SchedulePage() {
+interface SchedulePageProps {
+  isLearnerMode?: boolean;
+}
+
+export default function SchedulePage({ isLearnerMode = false }: SchedulePageProps) {
   const [view, setView] = useState<'list' | 'calendar'>('list');
   const [showFilter, setShowFilter] = useState(false);
   const [childFilter, setChildFilter] = useState<'all' | 'shaurya' | 'asmi'>('all');
@@ -153,23 +157,25 @@ export default function SchedulePage() {
         >
           <Calendar size={18} style={{ color: '#111318' }} />
         </button>
-        <button
-          onClick={() => setShowFilter(!showFilter)}
-          style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-            backgroundColor: '#FFFFFF',
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(17,19,24,0.08)'
-          }}
-        >
-          <SlidersHorizontal size={18} style={{ color: '#111318' }} />
-        </button>
+        {!isLearnerMode && (
+          <button
+            onClick={() => setShowFilter(!showFilter)}
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              backgroundColor: '#FFFFFF',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(17,19,24,0.08)'
+            }}
+          >
+            <SlidersHorizontal size={18} style={{ color: '#111318' }} />
+          </button>
+        )}
       </div>
 
       {/* Content Spacing */}
@@ -180,6 +186,7 @@ export default function SchedulePage() {
         <CalendarView
           bookings={bookings}
           onToggleView={() => setView('list')}
+          isLearnerMode={isLearnerMode}
         />
       )}
 
@@ -193,40 +200,41 @@ export default function SchedulePage() {
                 <div
                   key={booking.id}
                   style={{
-                    backgroundColor: booking.backgroundColor,
+                    backgroundColor: isLearnerMode ? '#FFFFFF' : booking.backgroundColor,
                     borderRadius: '28px',
                     padding: '20px',
                     boxShadow: '0 12px 30px rgba(17,19,24,0.08)',
                     position: 'relative'
                   }}
                 >
-                  {/* Child Name Text (No Background) */}
-                  <div style={{
-                    position: 'absolute',
-                    top: '20px',
-                    right: '20px'
-                  }}>
-                    <span style={{
-                      fontSize: '13px',
-                      fontWeight: 500,
-                      color: '#6E7480'
+                  {!isLearnerMode && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '20px',
+                      right: '20px'
                     }}>
-                      {booking.child}
-                    </span>
-                  </div>
+                      <span style={{
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        color: '#6E7480'
+                      }}>
+                        {booking.child}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Icon Badge */}
                   <div style={{
                     width: '48px',
                     height: '48px',
                     borderRadius: '16px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                    backgroundColor: isLearnerMode ? '#F4FAF8' : 'rgba(255, 255, 255, 0.6)',
                     marginBottom: '16px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}>
-                    <IconComponent size={24} style={{ color: booking.iconColor }} />
+                    <IconComponent size={24} style={{ color: isLearnerMode ? '#6E7480' : booking.iconColor }} />
                   </div>
 
                   {/* Title */}
@@ -235,7 +243,7 @@ export default function SchedulePage() {
                     fontWeight: 600,
                     color: '#111318',
                     marginBottom: '12px',
-                    paddingRight: '80px'
+                    paddingRight: isLearnerMode ? '0px' : '80px'
                   }}>
                     {booking.title}
                   </h3>
@@ -282,7 +290,7 @@ export default function SchedulePage() {
       )}
 
       {/* Filter Modal */}
-      {showFilter && (
+      {!isLearnerMode && showFilter && (
         <div
           style={{
             position: 'fixed',
