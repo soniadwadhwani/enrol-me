@@ -28,6 +28,7 @@ const AddChildPage = lazy(() => import('./components/AddChildPage'));
 const OrganisationDashboard = lazy(() => import('./components/OrganisationDashboard'));
 
 type Screen = 'home' | 'explore' | 'categoryDetail' | 'schedule' | 'communications' | 'fees' | 'profile' | 'classDetail' | 'locationSettings' | 'alerts' | 'editProfile' | 'savedClasses' | 'myApplications' | 'childrenProfiles' | 'settings' | 'helpCenter' | 'childDetail' | 'addChild';
+type ViewMode = 'select' | 'app' | 'desktop';
 
 interface ApplicationRecord {
   id: string;
@@ -49,8 +50,39 @@ const FRAME_PADDING = 11;
 const FRAME_WIDTH = IPHONE_16_WIDTH + FRAME_PADDING * 2;
 const FRAME_HEIGHT = IPHONE_16_HEIGHT + FRAME_PADDING * 2;
 
+const normalizePath = (pathname: string) => {
+  const withoutTrailingSlash = pathname.replace(/\/+$/, '');
+  return withoutTrailingSlash || '/';
+};
+
+const getModeFromPathname = (pathname: string): ViewMode => {
+  const normalizedPath = normalizePath(pathname);
+  if (normalizedPath === '/app') {
+    return 'app';
+  }
+  if (normalizedPath === '/desktop') {
+    return 'desktop';
+  }
+  return 'select';
+};
+
+const getPathnameForMode = (mode: ViewMode) => {
+  if (mode === 'app') {
+    return '/app';
+  }
+  if (mode === 'desktop') {
+    return '/desktop';
+  }
+  return '/';
+};
+
 export default function App() {
-  const [viewMode, setViewMode] = useState<'select' | 'app' | 'desktop'>('select');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    if (typeof window === 'undefined') {
+      return 'select';
+    }
+    return getModeFromPathname(window.location.pathname);
+  });
   const [viewportSize, setViewportSize] = useState({
     width: typeof window !== 'undefined' ? window.innerWidth : FRAME_WIDTH,
     height: typeof window !== 'undefined' ? window.innerHeight : FRAME_HEIGHT,
@@ -60,16 +92,52 @@ export default function App() {
     const handleResize = () => {
       setViewportSize({ width: window.innerWidth, height: window.innerHeight });
     };
-    window.addEventListener('resize', handleResize);
 
-    // Auto-detect mode from URL param (?mode=desktop or ?mode=app)
+    const handlePopState = () => {
+      setViewMode(getModeFromPathname(window.location.pathname));
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('popstate', handlePopState);
+
+    // Backward compatibility for old links like ?mode=desktop and ?mode=app.
     const params = new URLSearchParams(window.location.search);
     const urlMode = params.get('mode');
-    if (urlMode === 'desktop') setViewMode('desktop');
-    else if (urlMode === 'app') setViewMode('app');
+    if (urlMode === 'desktop' || urlMode === 'app') {
+      const nextMode: ViewMode = urlMode === 'desktop' ? 'desktop' : 'app';
+      const nextPathname = getPathnameForMode(nextMode);
+      if (normalizePath(window.location.pathname) !== nextPathname || window.location.search) {
+        window.history.replaceState(null, '', nextPathname);
+      }
+      setViewMode(nextMode);
+    }
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
+
+  const navigateToMode = (mode: ViewMode, replaceHistory = false) => {
+    setViewMode(mode);
+
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const targetPathname = getPathnameForMode(mode);
+    const currentPathname = normalizePath(window.location.pathname);
+    if (currentPathname === targetPathname && !window.location.search) {
+      return;
+    }
+
+    if (replaceHistory) {
+      window.history.replaceState(null, '', targetPathname);
+      return;
+    }
+
+    window.history.pushState(null, '', targetPathname);
+  };
 
   const phoneScale = useMemo(() => {
     const horizontalScale = (viewportSize.width - 32) / FRAME_WIDTH;
@@ -229,7 +297,7 @@ export default function App() {
               Same phone UI in desktop mode, now without the device frame.
             </div>
             <button
-              onClick={() => setViewMode('app')}
+              onClick={() => navigateToMode('app')}
               style={{
                 marginTop: '18px',
                 border: 'none',
@@ -417,15 +485,15 @@ export default function App() {
   if (viewMode === 'select') {
     return (
       <ModeSelectionScreen
-        onSelectAppMode={() => setViewMode('app')}
-        onSelectDesktopMode={() => setViewMode('desktop')}
+        onSelectAppMode={() => navigateToMode('app')}
+        onSelectDesktopMode={() => navigateToMode('desktop')}
       />
     );
   }
 
   // Desktop website – full independent web experience, no phone frame
   if (viewMode === 'desktop') {
-    return <DesktopWebsite onSwitchToApp={() => setViewMode('select')} />;
+    return <DesktopWebsite onSwitchToApp={() => navigateToMode('select')} />;
   }
 
   // Show onboarding if not completed
