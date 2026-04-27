@@ -9,9 +9,10 @@ interface HomeScreenProps {
   onNavigateToSchedule: () => void;
   onOpenLocationSettings: () => void;
   currentCity: string;
+  onSelectCategory?: (categoryName: string) => void;
 }
 
-export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenClassDetail, onNavigateToSchedule, onOpenLocationSettings, currentCity }: HomeScreenProps) {
+export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenClassDetail, onNavigateToSchedule, onOpenLocationSettings, currentCity, onSelectCategory }: HomeScreenProps) {
   const quickCategories = [
     { name: 'Sports', icon: Trophy },
     { name: 'Academics', icon: BookOpen },
@@ -891,6 +892,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
               return (
                 <div key={category.name} className="flex flex-col items-center" style={{ gap: '8px' }}>
                   <button
+                    onClick={() => onSelectCategory?.(category.name)}
                     style={{
                       width: '72px',
                       height: '72px',
@@ -925,6 +927,7 @@ export default function HomeScreen({ onNavigateToExplore, onOpenFilters, onOpenC
               return (
                 <div key={category.name} className="flex flex-col items-center" style={{ gap: '8px' }}>
                   <button
+                    onClick={() => onSelectCategory?.(category.name)}
                     style={{
                       width: '72px',
                       height: '72px',

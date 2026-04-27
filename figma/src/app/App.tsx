@@ -6,6 +6,7 @@ import Logo from '../imports/Logo.png';
 
 const HomeScreen = lazy(() => import('./components/HomeScreen'));
 const ExploreScreen = lazy(() => import('./components/ExploreScreen'));
+const CategoryDetailPage = lazy(() => import('./components/CategoryDetailPage'));
 const SchedulePage = lazy(() => import('./components/SchedulePage'));
 const CommunicationsPage = lazy(() => import('./components/CommunicationsPage'));
 const FeesPage = lazy(() => import('./components/FeesPage'));
@@ -26,7 +27,7 @@ const ChildDetailPage = lazy(() => import('./components/ChildDetailPage'));
 const AddChildPage = lazy(() => import('./components/AddChildPage'));
 const OrganisationDashboard = lazy(() => import('./components/OrganisationDashboard'));
 
-type Screen = 'home' | 'explore' | 'schedule' | 'communications' | 'fees' | 'profile' | 'classDetail' | 'locationSettings' | 'alerts' | 'editProfile' | 'savedClasses' | 'myApplications' | 'childrenProfiles' | 'settings' | 'helpCenter' | 'childDetail' | 'addChild';
+type Screen = 'home' | 'explore' | 'categoryDetail' | 'schedule' | 'communications' | 'fees' | 'profile' | 'classDetail' | 'locationSettings' | 'alerts' | 'editProfile' | 'savedClasses' | 'myApplications' | 'childrenProfiles' | 'settings' | 'helpCenter' | 'childDetail' | 'addChild';
 
 interface ApplicationRecord {
   id: string;
@@ -134,6 +135,7 @@ export default function App() {
   const [currentCity, setCurrentCity] = useState('Lavale');
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [selectedChildId, setSelectedChildId] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [myApplications, setMyApplications] = useState<ApplicationRecord[]>([
     {
       id: 'demo-application-1',
@@ -349,6 +351,18 @@ export default function App() {
     }
   };
 
+  const handleSelectCategory = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+    setActiveScreen('categoryDetail');
+    setActiveTab('home');
+  };
+
+  const handleBackFromCategoryDetail = () => {
+    setActiveScreen('home');
+    setActiveTab('home');
+    setSelectedCategory(null);
+  };
+
   const handleProfileNavigate = (screen: string) => {
     if (isLearnerMode && (screen === 'childrenProfiles' || screen === 'childDetail' || screen === 'addChild')) {
       setActiveScreen('profile');
@@ -440,6 +454,7 @@ export default function App() {
           onNavigateToSchedule={handleNavigateToSchedule}
           onOpenLocationSettings={handleOpenLocationSettings}
           currentCity={currentCity}
+          onSelectCategory={handleSelectCategory}
         />
       )}
       {activeScreen === 'explore' && (
@@ -447,7 +462,16 @@ export default function App() {
           onBack={() => {
             setActiveScreen('home');
             setActiveTab('home');
+            setSelectedCategory(null);
           }}
+          onOpenClassDetail={handleOpenClassDetail}
+          preselectedCategoryName={selectedCategory || undefined}
+        />
+      )}
+      {activeScreen === 'categoryDetail' && selectedCategory && (
+        <CategoryDetailPage
+          categoryName={selectedCategory}
+          onBack={handleBackFromCategoryDetail}
           onOpenClassDetail={handleOpenClassDetail}
         />
       )}

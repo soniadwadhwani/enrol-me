@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'motion/react';
 interface ExploreScreenProps {
   onBack?: () => void;
   onOpenClassDetail: (classData: any) => void;
+  preselectedCategoryName?: string;
 }
 
 interface ExploreCategory {
@@ -137,11 +138,25 @@ const buildListings = (category: ExploreCategory): ExploreClassItem[] => {
   ];
 };
 
-export default function ExploreScreen({ onBack, onOpenClassDetail }: ExploreScreenProps) {
+export default function ExploreScreen({ onBack, onOpenClassDetail, preselectedCategoryName }: ExploreScreenProps) {
   const [activeCategoryKey, setActiveCategoryKey] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // Auto-select category if preselected name is provided
+  useEffect(() => {
+    if (preselectedCategoryName) {
+      // Find the category by title that matches the provided name
+      const matchingCategory = allCategories.find(
+        (cat) => cat.title.toLowerCase().includes(preselectedCategoryName.toLowerCase()) ||
+                 cat.title.split(' ')[0].toLowerCase() === preselectedCategoryName.toLowerCase()
+      );
+      if (matchingCategory) {
+        setActiveCategoryKey(matchingCategory.key);
+      }
+    }
+  }, [preselectedCategoryName]);
 
   const activeCategory = useMemo(
     () => allCategories.find((item) => item.key === activeCategoryKey) ?? null,
