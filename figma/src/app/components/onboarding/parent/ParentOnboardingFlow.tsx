@@ -4,6 +4,7 @@ import ParentLocationScreen from './ParentLocationScreen';
 import ParentChildrenScreen from './ParentChildrenScreen';
 import ParentInterestsScreen from './ParentInterestsScreen';
 import ParentPreferencesScreen from './ParentPreferencesScreen';
+import ContactSyncScreen from '../ContactSyncScreen';
 import SuccessScreen from '../SuccessScreen';
 
 interface ParentOnboardingFlowProps {
@@ -18,7 +19,8 @@ export default function ParentOnboardingFlow({ onBack, onComplete }: ParentOnboa
     location: null,
     children: [],
     interests: {},
-    preferences: null
+    preferences: null,
+    contactsGranted: false,
   });
 
   const totalSteps = 5;
@@ -46,6 +48,15 @@ export default function ParentOnboardingFlow({ onBack, onComplete }: ParentOnboa
   const handlePreferences = (preferences: any) => {
     setUserData({ ...userData, preferences });
     setCurrentStep(5);
+  };
+
+  const handleContactsAllow = () => {
+    setUserData((prev: any) => ({ ...prev, contactsGranted: true }));
+    setCurrentStep(6);
+  };
+
+  const handleContactsSkip = () => {
+    setCurrentStep(6);
   };
 
   const handleEnterApp = () => {
@@ -96,6 +107,11 @@ export default function ParentOnboardingFlow({ onBack, onComplete }: ParentOnboa
       onContinue={handlePreferences}
       currentStep={4}
       totalSteps={totalSteps}
+    />,
+    <ContactSyncScreen
+      key="contacts"
+      onAllow={handleContactsAllow}
+      onSkip={handleContactsSkip}
     />,
     <SuccessScreen key="success" onEnterApp={handleEnterApp} />
   ];

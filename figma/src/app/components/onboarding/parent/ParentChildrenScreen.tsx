@@ -39,7 +39,7 @@ export default function ParentChildrenScreen({ onBack, onContinue, currentStep, 
   };
 
   const isValid = children.length > 0 && children.every(child =>
-    child.name.trim() && child.age.trim() && child.school.trim() && child.grade.trim()
+    child.name.trim() && child.age.trim() && child.grade.trim()
   );
 
   const handleContinue = () => {
@@ -231,24 +231,39 @@ export default function ParentChildrenScreen({ onBack, onContinue, currentStep, 
                   />
                 </div>
 
-                <input
-                  type="text"
-                  value={child.school}
-                  onChange={(e) => updateChild(child.id, 'school', e.target.value)}
-                  placeholder="School name"
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    borderRadius: '12px',
-                    border: '2px solid #E5E8ED',
-                    fontSize: '15px',
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type="text"
+                    value={child.school}
+                    onChange={(e) => updateChild(child.id, 'school', e.target.value)}
+                    placeholder="School name"
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      paddingRight: '76px',
+                      borderRadius: '12px',
+                      border: '2px solid #E5E8ED',
+                      fontSize: '15px',
+                      fontFamily: 'Raleway, sans-serif',
+                      backgroundColor: '#F4FAF8',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
+                    onFocus={(e) => e.currentTarget.style.borderColor = '#B6D6CC'}
+                    onBlur={(e) => e.currentTarget.style.borderColor = '#E5E8ED'}
+                  />
+                  <span style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: '#9CA3B0',
                     fontFamily: 'Raleway, sans-serif',
-                    backgroundColor: '#F4FAF8',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.currentTarget.style.borderColor = '#B6D6CC'}
-                  onBlur={(e) => e.currentTarget.style.borderColor = '#E5E8ED'}
-                />
+                    pointerEvents: 'none',
+                  }}>optional</span>
+                </div>
               </div>
             </motion.div>
           ))}

@@ -204,6 +204,7 @@ export default function App() {
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [selectedChildId, setSelectedChildId] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [contactsPermission, setContactsPermission] = useState(false);
   const [myApplications, setMyApplications] = useState<ApplicationRecord[]>([
     {
       id: 'demo-application-1',
@@ -465,6 +466,9 @@ export default function App() {
     if (userData.location) {
       setCurrentCity(userData.location);
     }
+    if (userData.contactsGranted) {
+      setContactsPermission(true);
+    }
     setOnboardingComplete(true);
   };
 
@@ -478,6 +482,7 @@ export default function App() {
     setCurrentCity('Lavale');
     setSelectedChatId(null);
     setSelectedChildId(null);
+    setContactsPermission(false);
     setMyApplications([]);
   };
 
@@ -587,6 +592,7 @@ export default function App() {
           classData={selectedClass}
           onBack={handleBackFromClassDetail}
           onSubmitApplication={handleSubmitApplication}
+          contactsPermission={contactsPermission}
         />
       )}
       {activeScreen === 'locationSettings' && (

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import StudentBasicInfoScreen from './StudentBasicInfoScreen';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
+import ContactSyncScreen from '../ContactSyncScreen';
 import SuccessScreen from '../SuccessScreen';
 
 interface StudentOnboardingFlowProps {
@@ -32,6 +33,7 @@ export default function StudentOnboardingFlow({ onBack, onComplete }: StudentOnb
   const [schedule, setSchedule] = useState<string[]>([]);
   const [budget, setBudget] = useState('');
   const [mode, setMode] = useState<string[]>([]);
+  const [contactsGranted, setContactsGranted] = useState(false);
 
   const totalSteps = 5;
 
@@ -48,6 +50,15 @@ export default function StudentOnboardingFlow({ onBack, onComplete }: StudentOnb
     }
   };
 
+  const handleContactsAllow = () => {
+    setContactsGranted(true);
+    setCurrentStep(5);
+  };
+
+  const handleContactsSkip = () => {
+    setCurrentStep(5);
+  };
+
   const handleComplete = () => {
     onComplete({
       userType: 'student',
@@ -56,7 +67,8 @@ export default function StudentOnboardingFlow({ onBack, onComplete }: StudentOnb
       interests,
       schedule,
       budget,
-      mode
+      mode,
+      contactsGranted,
     });
   };
 
@@ -176,8 +188,13 @@ export default function StudentOnboardingFlow({ onBack, onComplete }: StudentOnb
     );
   }
 
-  // Step 5: Success
+  // Step 5: Contact Sync
   if (currentStep === 4) {
+    return <ContactSyncScreen onAllow={handleContactsAllow} onSkip={handleContactsSkip} />;
+  }
+
+  // Step 6: Success
+  if (currentStep === 5) {
     return <SuccessScreen onEnterApp={handleComplete} />;
   }
 

@@ -15,9 +15,10 @@ interface ClassDetailPageProps {
     phoneNumber: string;
     notes: string;
   }) => void;
+  contactsPermission?: boolean;
 }
 
-export default function ClassDetailPage({ classData, onBack, onSubmitApplication }: ClassDetailPageProps) {
+export default function ClassDetailPage({ classData, onBack, onSubmitApplication, contactsPermission = false }: ClassDetailPageProps) {
   const [showEnrollForm, setShowEnrollForm] = useState(false);
   const [applicationSent, setApplicationSent] = useState(false);
   const [formData, setFormData] = useState({
@@ -47,6 +48,12 @@ export default function ClassDetailPage({ classData, onBack, onSubmitApplication
       reviewsPreview: classData?.reviewsPreview ?? 'Parents appreciate the clear communication and measurable progress.',
     };
   }, [classData]);
+
+  const contactReviews = [
+    { initials: 'RS', name: 'Rahul S.', text: 'Great instructors and my kid absolutely loves it. Worth every rupee!', rating: 5 },
+    { initials: 'MP', name: 'Meera P.', text: 'Very organised, timely communication. Visible improvement in 2 months.', rating: 5 },
+    { initials: 'DA', name: 'Deepak A.', text: 'My daughter has come a long way since joining. Highly recommend!', rating: 4 },
+  ];
 
   const reviews = [
     { name: 'Priya Sharma', text: details.reviewsPreview, rating: 5 },
@@ -172,7 +179,64 @@ export default function ClassDetailPage({ classData, onBack, onSubmitApplication
           </div>
 
           <div style={{ backgroundColor: '#FFFFFF', borderRadius: '18px', padding: '14px', boxShadow: '0 8px 24px rgba(17,19,24,0.06)' }}>
-            <div style={{ fontSize: '15px', fontWeight: 700, color: '#111318', marginBottom: '8px' }}>Reviews Preview</div>
+            <div style={{ fontSize: '15px', fontWeight: 700, color: '#111318', marginBottom: '8px' }}>Reviews</div>
+
+            {/* Contact reviews — shown only when contacts permission was granted */}
+            {contactsPermission && (
+              <div style={{ marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#74A4BC' }} />
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#74A4BC', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                    From your contacts
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+                  {contactReviews.map((review) => (
+                    <div
+                      key={review.name}
+                      style={{
+                        backgroundColor: '#EEF6FF',
+                        borderRadius: '12px',
+                        padding: '10px',
+                        border: '1px solid #D4E8F5',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <div
+                          style={{
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '50%',
+                            background: 'linear-gradient(135deg, #B6D6CC, #74A4BC)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            color: '#FFFFFF',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {review.initials}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '13px', fontWeight: 700, color: '#111318', lineHeight: 1.2 }}>{review.name}</div>
+                          <div style={{ fontSize: '11px', color: '#74A4BC', fontWeight: 600 }}>from your contacts</div>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '13px', color: '#4A5568', marginBottom: '6px', lineHeight: 1.45 }}>{review.text}</div>
+                      <div style={{ display: 'flex', gap: '2px' }}>
+                        {[...Array(review.rating)].map((_, idx) => (
+                          <Star key={`${review.name}-${idx}`} size={12} fill="#F11859" style={{ color: '#F11859' }} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ height: '1px', backgroundColor: '#E5EDF5', marginBottom: '12px' }} />
+              </div>
+            )}
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {reviews.map((review) => (
                 <div key={review.name} style={{ backgroundColor: '#F8FBFA', borderRadius: '12px', padding: '10px' }}>
