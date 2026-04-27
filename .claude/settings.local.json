@@ -4,7 +4,8 @@
       "Bash(npx tsc *)",
       "Bash(pnpm run *)",
       "Bash(node node_modules/.bin/vite build)",
-      "Bash(npx vite *)"
+      "Bash(npx vite *)",
+      "Bash(git push *)"
     ]
   }
 }
