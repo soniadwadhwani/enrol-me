@@ -1,5 +1,8 @@
 import { lazy, Suspense, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
 import OnboardingFlow from './components/onboarding/OnboardingFlow';
+import ModeSelectionScreen from './components/ModeSelectionScreen';
+import DesktopWebsite from './components/DesktopWebsite';
+import Logo from '../imports/Logo.png';
 
 const HomeScreen = lazy(() => import('./components/HomeScreen'));
 const ExploreScreen = lazy(() => import('./components/ExploreScreen'));
@@ -46,6 +49,7 @@ const FRAME_WIDTH = IPHONE_16_WIDTH + FRAME_PADDING * 2;
 const FRAME_HEIGHT = IPHONE_16_HEIGHT + FRAME_PADDING * 2;
 
 export default function App() {
+  const [viewMode, setViewMode] = useState<'select' | 'app' | 'desktop'>('select');
   const [viewportSize, setViewportSize] = useState({
     width: typeof window !== 'undefined' ? window.innerWidth : FRAME_WIDTH,
     height: typeof window !== 'undefined' ? window.innerHeight : FRAME_HEIGHT,
@@ -55,14 +59,28 @@ export default function App() {
     const handleResize = () => {
       setViewportSize({ width: window.innerWidth, height: window.innerHeight });
     };
-
     window.addEventListener('resize', handleResize);
+
+    // Auto-detect mode from URL param (?mode=desktop or ?mode=app)
+    const params = new URLSearchParams(window.location.search);
+    const urlMode = params.get('mode');
+    if (urlMode === 'desktop') setViewMode('desktop');
+    else if (urlMode === 'app') setViewMode('app');
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const phoneScale = useMemo(() => {
     const horizontalScale = (viewportSize.width - 32) / FRAME_WIDTH;
     const verticalScale = (viewportSize.height - 48) / FRAME_HEIGHT;
+    return Math.min(1, horizontalScale, verticalScale);
+  }, [viewportSize.height, viewportSize.width]);
+
+  const desktopScale = useMemo(() => {
+    const hasMascotRail = viewportSize.width >= 1180;
+    const reservedWidth = hasMascotRail ? 430 : 64;
+    const horizontalScale = (viewportSize.width - reservedWidth) / IPHONE_16_WIDTH;
+    const verticalScale = (viewportSize.height - 48) / IPHONE_16_HEIGHT;
     return Math.min(1, horizontalScale, verticalScale);
   }, [viewportSize.height, viewportSize.width]);
 
@@ -146,6 +164,98 @@ export default function App() {
       </div>
     </div>
   );
+
+  const renderInDesktopCanvas = (content: ReactNode) => (
+    <div
+      style={{
+        ...appShellStyle,
+        overflow: 'auto',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '1320px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '28px',
+        }}
+      >
+        <div
+          style={{
+            width: `${IPHONE_16_WIDTH}px`,
+            height: `${IPHONE_16_HEIGHT}px`,
+            backgroundColor: '#F4FAF8',
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            borderRadius: '44px',
+            boxShadow: '0 26px 58px rgba(17, 19, 24, 0.2)',
+            transform: `scale(${desktopScale})`,
+            transformOrigin: 'center',
+            marginTop: `${(IPHONE_16_HEIGHT * (desktopScale - 1)) / 2}px`,
+            marginBottom: `${(IPHONE_16_HEIGHT * (desktopScale - 1)) / 2}px`,
+          }}
+        >
+          {content}
+        </div>
+
+        {viewportSize.width >= 1180 && (
+          <div
+            style={{
+              width: '320px',
+              minHeight: '420px',
+              borderRadius: '32px',
+              background: 'linear-gradient(150deg, #dff1eb 0%, #c8e4da 48%, #b6d6cc 100%)',
+              boxShadow: '0 20px 48px rgba(17, 19, 24, 0.14)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '28px 24px',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ fontSize: '14px', fontWeight: 700, color: '#2D6F57', marginBottom: '12px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>
+              Enrol-Me Mascot
+            </div>
+            <img src={Logo} alt="Enrol-Me mascot" style={{ width: '212px', height: 'auto', marginBottom: '14px' }} />
+            <div style={{ fontSize: '15px', color: '#1F3D33', lineHeight: 1.4 }}>
+              Same phone UI in desktop mode, now without the device frame.
+            </div>
+            <button
+              onClick={() => setViewMode('app')}
+              style={{
+                marginTop: '18px',
+                border: 'none',
+                borderRadius: '12px',
+                height: '42px',
+                padding: '0 16px',
+                backgroundColor: '#111318',
+                color: '#FFFFFF',
+                fontSize: '14px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                fontFamily: 'Raleway, sans-serif',
+              }}
+            >
+              Switch to App Mode
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderInSelectedMode = (content: ReactNode) => {
+    if (viewMode === 'desktop') {
+      return renderInDesktopCanvas(content);
+    }
+    return renderInPhoneFrame(content);
+  };
 
   const handleNavigateToExplore = () => {
     setActiveScreen('explore');
@@ -289,21 +399,36 @@ export default function App() {
     setMyApplications([]);
   };
 
+  // Mode selection screen
+  if (viewMode === 'select') {
+    return (
+      <ModeSelectionScreen
+        onSelectAppMode={() => setViewMode('app')}
+        onSelectDesktopMode={() => setViewMode('desktop')}
+      />
+    );
+  }
+
+  // Desktop website – full independent web experience, no phone frame
+  if (viewMode === 'desktop') {
+    return <DesktopWebsite onSwitchToApp={() => setViewMode('select')} />;
+  }
+
   // Show onboarding if not completed
   if (!onboardingComplete) {
-    return renderInPhoneFrame(<OnboardingFlow onComplete={handleOnboardingComplete} />);
+    return renderInSelectedMode(<OnboardingFlow onComplete={handleOnboardingComplete} />);
   }
 
   // Show Organisation Dashboard
   if (userRole === 'organisation') {
-    return renderInPhoneFrame(
+    return renderInSelectedMode(
       <Suspense fallback={suspenseFallback}>
         <OrganisationDashboard onLogout={handleLogout} />
       </Suspense>,
     );
   }
 
-  return renderInPhoneFrame(
+  return renderInSelectedMode(
     <Suspense fallback={suspenseFallback}>
 
       {/* Screen Content */}

@@ -9,10 +9,11 @@ import OrganisationOnboardingFlow from './organisation/OrganisationOnboardingFlo
 
 interface OnboardingFlowProps {
   onComplete: (userData: any) => void;
+  startAtRoleSelection?: boolean;
 }
 
-export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
-  const [currentScreen, setCurrentScreen] = useState(0);
+export default function OnboardingFlow({ onComplete, startAtRoleSelection = false }: OnboardingFlowProps) {
+  const [currentScreen, setCurrentScreen] = useState(startAtRoleSelection ? 1 : 0);
   const [selectedUserType, setSelectedUserType] = useState<'parent' | 'student' | 'organisation' | null>(null);
 
   const handleGetStarted = () => {
