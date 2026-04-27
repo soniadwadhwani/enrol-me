@@ -358,170 +358,104 @@ export default function DesktopWebsite({ onSwitchToApp: _onSwitchToApp }: Deskto
             A small nudge right keeps it visually centered in the left column
             while the speech bubble flows naturally to the right into the gap.
           */}
-          <div style={{ transform: 'translateX(24px)', overflow: 'visible' }}>
+          <div style={{ transform: 'translateX(48px)', overflow: 'visible' }}>
             <BlobMascot
-              scale={1.38}
+              scale={1.5}
               speechText={'Hi! Welcome to Enrol-Me. Explore classes near you! ✨'}
               onClick={() => window.scrollTo({ top: 700, behavior: 'smooth' })}
             />
           </div>
         </div>
 
-        {/* ── Right – Discovery Panel ── */}
-        <div>
-          {/* Small headline */}
-          <div style={{ marginBottom: 16 }}>
-            <h1 style={{
-              fontFamily: FONT, fontWeight: 900,
-              fontSize: 'clamp(24px, 2.4vw, 34px)',
-              lineHeight: 1.1, color: C.dark,
-              margin: '0 0 6px', letterSpacing: '-0.025em',
-            }}>
-              Find the right{' '}
-              <span style={{
-                background: `linear-gradient(135deg, ${C.blue} 0%, ${C.purple} 100%)`,
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              }}>classes</span>{' '}near you.
-            </h1>
-            <p style={{ fontFamily: FONT, fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.6 }}>
-              Sports, academics, arts and more in <strong style={{ color: C.body }}>{city}</strong>.
-            </p>
-          </div>
-
-          {/* Discovery panel card */}
+        {/* ── Right – App-style Discovery Box ── */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{
-            background: 'rgba(255,255,255,0.97)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            borderRadius: 24,
-            border: '1px solid rgba(226,232,240,0.9)',
-            boxShadow: '0 12px 48px rgba(15,23,42,0.09), 0 3px 12px rgba(15,23,42,0.05)',
-            padding: '14px',
-            overflow: 'hidden',
+            width: '100%',
+            background: '#FFFFFF',
+            borderRadius: 28,
+            border: `1.5px solid ${C.border}`,
+            boxShadow: '0 8px 48px rgba(15,23,42,0.10), 0 2px 12px rgba(15,23,42,0.06)',
+            padding: '28px 28px 32px',
           }}>
 
-            {/* App-style pill search bar */}
+            {/* Search bar — exact app style */}
             <div style={{
-              background: '#FFFFFF',
+              display: 'flex', alignItems: 'center', gap: 10,
+              background: '#F4F6F9',
               borderRadius: 50,
-              padding: '7px 7px 7px 16px',
-              display: 'flex', alignItems: 'center', gap: 8,
-              border: `1.5px solid ${C.border}`,
-              boxShadow: '0 2px 12px rgba(15,23,42,0.07)',
-              marginBottom: 11,
+              padding: '11px 10px 11px 20px',
+              marginBottom: 28,
             }}>
-              <Search size={14} color={C.muted} strokeWidth={2} />
+              <Search size={17} color={C.muted} strokeWidth={2} style={{ flexShrink: 0 }} />
               <input
                 type="text"
-                placeholder="Search classes, tutors, sports..."
+                placeholder="Search classes, tutors, sports"
                 value={searchQ}
                 onChange={e => setSearchQ(e.target.value)}
                 onClick={() => { if (!isLoggedIn) setShowLogin(true); }}
                 readOnly={!isLoggedIn}
                 style={{
                   flex: 1, border: 'none', outline: 'none',
-                  fontFamily: FONT, fontSize: 13, color: C.dark,
+                  fontFamily: FONT, fontSize: 14, color: C.dark,
                   background: 'transparent',
                   cursor: !isLoggedIn ? 'pointer' : 'text',
                 }}
               />
+              {/* Filter icon button — app style */}
               <button
                 onClick={() => gate()}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: 5,
-                  background: C.bgSection,
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 50, padding: '7px 14px',
-                  fontFamily: FONT, fontSize: 12, fontWeight: 600, color: C.muted,
-                  cursor: 'pointer', transition: 'all 0.15s', whiteSpace: 'nowrap',
-                  flexShrink: 0,
+                  width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
+                  background: '#FFFFFF',
+                  border: `1.5px solid ${C.border}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', transition: 'all 0.15s',
+                  boxShadow: '0 1px 4px rgba(15,23,42,0.08)',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = C.blue; e.currentTarget.style.color = C.blue; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.blue; (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 2px 10px rgba(58,140,200,0.2)`; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.border; (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 1px 4px rgba(15,23,42,0.08)'; }}
               >
-                <Filter size={12} strokeWidth={2} /> Filters
+                <SlidersHorizontal size={17} color={C.muted} strokeWidth={2} />
               </button>
             </div>
 
-            {/* Category pills */}
-            <div
-              className="em-carousel"
-              style={{ display: 'flex', gap: 7, overflowX: 'auto', marginBottom: 14, paddingBottom: 2 }}
-            >
-              {['All','Sports','Academics','Arts','Music','Coding','Tutors','Swimming','Dance'].map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setHeroCat(cat)}
-                  style={{
-                    flexShrink: 0,
-                    padding: '5px 14px', borderRadius: 50,
-                    border: 'none',
-                    background: heroCat === cat
-                      ? `linear-gradient(135deg, ${C.blue}, ${C.purple})`
-                      : 'rgba(15,23,42,0.05)',
-                    color: heroCat === cat ? '#fff' : C.body,
-                    fontFamily: FONT, fontSize: 11.5, fontWeight: 700,
-                    cursor: 'pointer', transition: 'all 0.15s', whiteSpace: 'nowrap',
-                    boxShadow: heroCat === cat ? '0 2px 8px rgba(58,140,200,0.30)' : 'none',
-                  }}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Compact carousel */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Popular near you</span>
-                <button
-                  onClick={() => gate()}
-                  style={{
-                    background: 'none', border: 'none', fontFamily: FONT,
-                    fontSize: 12, fontWeight: 600, color: C.blue, cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: 3,
-                  }}
-                >
-                  See all <ChevronRight size={12} />
-                </button>
-              </div>
-              <div className="em-carousel" style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
-                {DISC_CLASSES.map(c => (
+            {/* Category icon grid — app style */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px 4px' }}>
+              {HERO_CATS.map(({ id, label, Icon }) => {
+                const active = heroCat === id;
+                return (
                   <div
-                    key={c.id}
-                    onClick={() => gate()}
+                    key={id}
+                    onClick={() => setHeroCat(active ? '' : id)}
                     style={{
-                      flexShrink: 0, width: 128, cursor: 'pointer',
-                      background: '#FFFFFF', borderRadius: 12,
-                      border: '1px solid rgba(226,232,240,0.7)',
-                      boxShadow: '0 1px 6px rgba(15,23,42,0.06)',
-                      overflow: 'hidden', transition: 'transform 0.18s, box-shadow 0.18s',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+                      cursor: 'pointer',
                     }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-3px)'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 20px rgba(15,23,42,0.12)'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 2px 8px rgba(15,23,42,0.06)'; }}
                   >
-                    <img src={c.img} alt={c.title} style={{ width: '100%', height: 74, objectFit: 'cover', display: 'block' }} />
-                    <div style={{ padding: '7px 8px 9px' }}>
-                      <div style={{
-                        fontFamily: FONT, fontSize: 11.5, fontWeight: 700, color: C.dark,
-                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                        marginBottom: 3,
-                      }}>{c.title}</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 3, marginBottom: 4 }}>
-                        <MapPin size={8} color={C.muted} strokeWidth={2.5} />
-                        <span style={{ fontFamily: FONT, fontSize: 9.5, color: C.muted }}>{c.area}</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                          <Star size={8} color="#F59E0B" fill="#F59E0B" />
-                          <span style={{ fontFamily: FONT, fontSize: 9.5, fontWeight: 700, color: C.dark }}>{c.rating}</span>
-                        </div>
-                        <span style={{ fontFamily: FONT, fontSize: 9.5, fontWeight: 700, color: C.blue }}>{c.price}</span>
-                      </div>
+                    <div style={{
+                      width: 62, height: 62, borderRadius: '50%',
+                      background: active
+                        ? `linear-gradient(135deg, ${C.blue}, ${C.purple})`
+                        : '#F4F6F9',
+                      border: active ? 'none' : `1.5px solid rgba(226,232,240,0.9)`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      transition: 'all 0.18s',
+                      boxShadow: active
+                        ? `0 6px 18px rgba(58,140,200,0.32)`
+                        : '0 1px 5px rgba(15,23,42,0.07)',
+                    }}>
+                      <Icon size={25} color={active ? '#fff' : C.dark} strokeWidth={1.6} />
                     </div>
+                    <span style={{
+                      fontFamily: FONT, fontSize: 12, fontWeight: 600,
+                      color: active ? C.dark : C.muted,
+                      textAlign: 'center', lineHeight: 1,
+                    }}>
+                      {label}
+                    </span>
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
 
           </div>
