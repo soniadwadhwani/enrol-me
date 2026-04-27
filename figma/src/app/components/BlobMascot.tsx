@@ -284,31 +284,31 @@ export default function BlobMascot({ scale = 1, speechText, onClick }: BlobMasco
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
           style={{
             position: 'absolute',
-            top: '16%',
-            right: px(-148),
-            width: px(140),
+            top: '10%',
+            right: px(-90),
+            width: px(162),
             backgroundColor: '#FFFFFF',
-            borderRadius: px(18),
-            padding: `${10*s}px ${12*s}px`,
-            boxShadow: `0 ${8*s}px ${24*s}px rgba(17,19,24,0.14)`,
+            borderRadius: px(20),
+            padding: `${12*s}px ${14*s}px`,
+            boxShadow: `0 ${10*s}px ${28*s}px rgba(17,19,24,0.16)`,
             pointerEvents: 'none',
           }}
         >
           {/* Tail */}
           <div style={{
             position: 'absolute',
-            left: px(-8), top: '50%',
+            left: px(-9), top: '40%',
             transform: 'translateY(-50%)',
             width: 0, height: 0,
-            borderTop: `${8*s}px solid transparent`,
-            borderBottom: `${8*s}px solid transparent`,
-            borderRight: `${10*s}px solid #FFFFFF`,
+            borderTop: `${9*s}px solid transparent`,
+            borderBottom: `${9*s}px solid transparent`,
+            borderRight: `${11*s}px solid #FFFFFF`,
           }} />
           <div style={{
-            fontSize: `${11.5 * s}px`,
-            fontWeight: 600,
+            fontSize: `${13 * s}px`,
+            fontWeight: 700,
             color: '#111318',
-            lineHeight: 1.35,
+            lineHeight: 1.4,
             textAlign: 'center',
             fontFamily: "'Raleway', sans-serif",
           }}>

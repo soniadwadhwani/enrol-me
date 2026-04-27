@@ -358,10 +358,10 @@ export default function DesktopWebsite({ onSwitchToApp: _onSwitchToApp }: Deskto
             A small nudge right keeps it visually centered in the left column
             while the speech bubble flows naturally to the right into the gap.
           */}
-          <div style={{ transform: 'translateX(48px)', overflow: 'visible' }}>
+          <div style={{ transform: 'translateX(10px)', overflow: 'visible' }}>
             <BlobMascot
               scale={1.5}
-              speechText={'Hi! Welcome to Enrol-Me. Explore classes near you! ✨'}
+              speechText={'Hi! Welcome to Enrol-Me, let\'s explore classes near you! 🎉'}
               onClick={() => window.scrollTo({ top: 700, behavior: 'smooth' })}
             />
           </div>
