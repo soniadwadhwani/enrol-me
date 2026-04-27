@@ -2,6 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm --prefix figma install",
   "buildCommand": "node scripts/vercel-build.mjs",
-  "outputDirectory": ".vercel_build_output",
-  "rewrites": [{ "source": "/figma", "destination": "/figma/index.html" }]
+  "outputDirectory": ".vercel_build_output"
 }
